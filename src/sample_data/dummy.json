@@ -1,0 +1,25 @@
+{
+  "links": { "next": "TODO", "last": "TODO", "first": "TODO", "prev": "TODO" },
+  "data": [
+    {
+      "name": "Caleb K // BlackEcho#09078",
+      "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
+    },
+    {
+      "name": "Stephen H // Crayth#38098",
+      "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
+    },
+    {
+      "name": "John D // DailyDraft#87013",
+      "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
+    },
+    {
+      "name": "Bob P // HIT#08120",
+      "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
+    },
+    {
+      "name": "Adam E // adamend#97520",
+      "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
+    }
+  ]
+}
