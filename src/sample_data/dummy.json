@@ -3,22 +3,27 @@
   "data": [
     {
       "name": "Caleb K // BlackEcho#09078",
+      "leagues": ["LTR","WOE","XLN","KTK","MH3","DSK"],
       "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
     },
     {
       "name": "Stephen H // Crayth#38098",
+      "leagues": ["LTR","WOE","XLN","KTK","MH3","DSK"],
       "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
     },
     {
       "name": "John D // DailyDraft#87013",
+      "leagues": ["LTR","WOE","XLN","KTK","MH3","DSK"],
       "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
     },
     {
       "name": "Bob P // HIT#08120",
+      "leagues": ["LTR","WOE","XLN","KTK","MH3","DSK"],
       "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
     },
     {
       "name": "Adam E // adamend#97520",
+      "leagues": ["LTR","WOE","XLN","KTK","MH3","DSK"],
       "stats": { "leagueCount": 99, "winRate": 99.0, "top8s": 99 }
     }
   ]
