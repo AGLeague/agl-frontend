@@ -11,7 +11,7 @@ const rarityMap: Record<string, string> = {
 
 // Function to get the image path for an achievement
 export const getAchievementImage = (achievement: Achievement): string => {
-  const rarity = rarityMap[achievement.rarity] || achievement.rarity;
+  const rarity = rarityMap[achievement.rarity] || 'Common';
   const imageName = `${achievement.collectorNumber} - ${achievement.name} (${rarity}).png`;
   return `/src/assets/images/${imageName}`;
 };

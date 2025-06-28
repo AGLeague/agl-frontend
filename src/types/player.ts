@@ -29,4 +29,8 @@ export interface PlayersResponse {
     prev: string;
   };
   data: Player[];
+}
+
+export interface PlayerNamesResponse {
+  data: string[];
 } 

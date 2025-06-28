@@ -1,4 +1,4 @@
-import { Player, PlayerAchievements, PlayersResponse } from '../types/player';
+import { Player, PlayerAchievements, PlayersResponse, PlayerNamesResponse } from '../types/player';
 
 const API_BASE_URL = 'https://agl.calebkoch.com/api';
 
@@ -8,6 +8,15 @@ export const playerApi = {
     const response = await fetch(`${API_BASE_URL}/players`);
     if (!response.ok) {
       throw new Error('Failed to fetch players');
+    }
+    return response.json();
+  },
+
+  // Get player names for dropdown
+  getPlayerNames: async (): Promise<PlayerNamesResponse> => {
+    const response = await fetch(`${API_BASE_URL}/players/names`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch player names');
     }
     return response.json();
   },

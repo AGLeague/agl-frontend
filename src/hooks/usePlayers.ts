@@ -10,6 +10,7 @@ export const playerKeys = {
   details: () => [...playerKeys.all, 'detail'] as const,
   detail: (id: string) => [...playerKeys.details(), id] as const,
   achievements: (id: string) => [...playerKeys.detail(id), 'achievements'] as const,
+  names: () => [...playerKeys.all, 'names'] as const,
 };
 
 // Hook for fetching all players
@@ -17,6 +18,14 @@ export const usePlayers = () => {
   return useQuery({
     queryKey: playerKeys.lists(),
     queryFn: playerApi.getPlayers,
+  });
+};
+
+// Hook for fetching player names
+export const usePlayerNames = () => {
+  return useQuery({
+    queryKey: playerKeys.names(),
+    queryFn: playerApi.getPlayerNames,
   });
 };
 

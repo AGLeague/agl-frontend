@@ -1,9 +1,10 @@
 #root {
-  
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+  height: 100vh;
 }
 
 .logo {
@@ -75,13 +76,18 @@
 
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .stats-table-container {
@@ -174,14 +180,20 @@
 }
 
 .achievements-container {
-  margin: 2rem auto;
-  max-width: 900px;
+  margin: 0;
+  max-width: none;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .achievements-container h2 {
   color: #333;
-  margin-bottom: 1.5rem;
+  margin: 1rem 2rem;
   font-size: 1.5rem;
+  flex-shrink: 0;
 }
 
 .achievements-table-container {
@@ -303,7 +315,497 @@
 
 .modal-caption {
   margin-top: 1rem;
-  color: #333;
   font-size: 1.1rem;
+  color: #333;
+  text-align: center;
+}
+
+.modal-details {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.modal-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.modal-rarity {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-number {
+  font-weight: 600;
+  color: #666;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+}
+
+/* Player Dropdown Styles */
+.player-selection {
+  margin: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-shrink: 0;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.player-selection label {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.player-dropdown {
+  position: relative;
+  min-width: 300px;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  overflow: hidden;
+}
+
+.dropdown-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.dropdown-input::placeholder {
+  color: #999;
+}
+
+.dropdown-toggle {
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border: none;
+  border-left: 1px solid #ddd;
+  cursor: pointer;
+  color: #666;
+  font-size: 0.8rem;
+  transition: background-color 0.2s;
+}
+
+.dropdown-toggle:hover {
+  background: #e9ecef;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 0.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item.selected {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.dropdown-item.no-results {
+  color: #999;
+  font-style: italic;
+  cursor: default;
+}
+
+.dropdown-item.no-results:hover {
+  background-color: transparent;
+}
+
+/* Responsive dropdown */
+@media (max-width: 768px) {
+  .player-selection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .player-dropdown {
+    min-width: auto;
+  }
+  
+  .dropdown-menu {
+    max-height: 250px;
+  }
+}
+
+/* Binder Styles */
+.binder-container {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  border-radius: 0;
+  padding: 1rem;
+  box-shadow: none;
+  margin: 0;
+  min-height: calc(100vh - 200px);
+  width: 100%;
+  position: relative;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.75rem;
+  padding-top: 1rem;
+  height: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.achievement-card {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.achievement-card.empty-card {
+  opacity: 0.3;
+  border-style: dashed;
+}
+
+.achievement-card.missing-achievement {
+  opacity: 0.6;
+  border-style: dashed;
+  border-color: #ccc;
+  background: #f8f9fa;
+}
+
+.achievement-card.has-achievement {
+  opacity: 1;
+  border-style: solid;
+  border-color: #e0e0e0;
+}
+
+.missing-achievement-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: #999;
+  text-align: center;
+  padding: 1rem;
+}
+
+.achievement-number {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-family: 'Courier New', monospace;
+}
+
+.missing-text {
+  font-size: 0.7rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.achievement-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: #007bff;
+}
+
+.card-image-container {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.achievement-card-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border-radius: 8px;
+}
+
+.achievement-card-image:hover {
+  transform: scale(1.05);
+}
+
+.card-info {
+  padding: 1rem;
+  background: white;
+}
+
+.card-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.card-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.card-rarity {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-number {
+  font-weight: 600;
+  color: #999;
+  font-family: 'Courier New', monospace;
+}
+
+/* Rarity-specific colors */
+.achievement-card[data-rarity="Common"] .card-rarity {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
+
+.achievement-card[data-rarity="Uncommon"] .card-rarity {
+  background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+}
+
+.achievement-card[data-rarity="Rare"] .card-rarity {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.achievement-card[data-rarity="Mythic"] .card-rarity {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+.achievement-card[data-rarity="SPG"] .card-rarity {
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+  color: #212529;
+}
+
+/* Responsive binder */
+@media (max-width: 768px) {
+  .binder-container {
+    padding: 0.5rem;
+    margin: 0;
+  }
+  
+  .binder-page {
+    padding: 1rem;
+    margin: 0;
+  }
+  
+  .achievement-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.5rem;
+    max-width: none;
+  }
+  
+  .achievement-card {
+    min-height: 150px;
+  }
+  
+  .player-selection {
+    margin: 0.5rem 1rem;
+    padding: 0.75rem;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .page-navigation {
+    margin-left: 0;
+    gap: 0.5rem;
+  }
+  
+  .page-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .page-indicator {
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+  
+  .achievements-container h2 {
+    margin: 0.5rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .achievement-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.25rem;
+  }
+  
+  .achievement-card {
+    min-height: 120px;
+  }
+  
+  .player-selection {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .page-navigation {
+    gap: 0.25rem;
+  }
+  
+  .page-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+  }
+  
+  .page-indicator {
+    font-size: 0.8rem;
+    min-width: 80px;
+  }
+  
+  .achievements-container h2 {
+    margin: 0.5rem;
+  }
+}
+
+/* Page Flipping Animation */
+.binder-page {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-height: calc(100vh - 250px);
+  margin: 0;
+  transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.binder-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 8px;
+  background: linear-gradient(90deg, #ddd 0%, #bbb 50%, #ddd 100%);
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.binder-page.flipping {
+  transform: rotateY(90deg);
+}
+
+/* Page Navigation */
+.page-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.page-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.page-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.page-indicator {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  min-width: 120px;
   text-align: center;
 }

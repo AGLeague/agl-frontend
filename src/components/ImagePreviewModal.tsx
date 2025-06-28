@@ -3,10 +3,18 @@ import React, { useEffect } from 'react';
 interface ImagePreviewModalProps {
   imageUrl: string;
   achievementName: string;
+  achievementRarity?: string;
+  achievementNumber?: number;
   onClose: () => void;
 }
 
-const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ imageUrl, achievementName, onClose }) => {
+const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ 
+  imageUrl, 
+  achievementName, 
+  achievementRarity,
+  achievementNumber,
+  onClose 
+}) => {
   // Close modal when pressing Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -35,7 +43,13 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({ imageUrl, achieve
           alt={achievementName} 
           className="modal-image"
         />
-        <div className="modal-caption">{achievementName}</div>
+        <div className="modal-details">
+          <div className="modal-caption">{achievementName}</div>
+          <div className="modal-info">
+            <span className="modal-rarity">{achievementRarity || 'Common'}</span>
+            <span className="modal-number">#{achievementNumber}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
