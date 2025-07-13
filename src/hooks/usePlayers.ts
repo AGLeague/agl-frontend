@@ -66,7 +66,7 @@ export const useUpdatePlayer = () => {
   return useMutation({
     mutationFn: ({ playerName, player }: { playerName: string; player: Partial<Player> }) =>
       playerApi.updatePlayer(playerName, player),
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: playerKeys.detail(variables.playerName) });
       queryClient.invalidateQueries({ queryKey: playerKeys.lists() });
     },
