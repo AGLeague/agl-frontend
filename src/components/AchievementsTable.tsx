@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { usePlayers } from '../hooks/usePlayers';
 import { usePlayerAchievements } from '../hooks/usePlayers';
 import type { Achievement } from '../types/player';
 import { getAchievementImage, preloadAchievementImages } from '../utils/achievementImages';
 import ImagePreviewModal from './ImagePreviewModal';
 import PlayerDropdown from './PlayerDropdown';
+import HTMLFlipBook from 'react-pageflip';
 
 const AchievementsTable: React.FC = () => {
   const { data: playersResponse, isLoading: isLoadingPlayers, error: playersError } = usePlayers();
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string; rarity: string; number: number } | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [isFlipping, setIsFlipping] = useState(false);
+  const flipBookRef = useRef<{ pageFlip: () => { flip: (page: number) => void } }>(null);
   
   const CARDS_PER_PAGE = 9; // 3x3 grid
   
@@ -41,13 +42,10 @@ const AchievementsTable: React.FC = () => {
   };
 
   const handlePageChange = (newPage: number) => {
-    if (isFlipping) return; // Prevent rapid clicking
-    
-    setIsFlipping(true);
-    setTimeout(() => {
-      setCurrentPage(newPage);
-      setTimeout(() => setIsFlipping(false), 150);
-    }, 150);
+    if (flipBookRef.current) {
+      const page = Math.max(0, Math.min(newPage, totalPages - 1));
+      flipBookRef.current.pageFlip().flip(page);
+    }
   };
 
   // Create a map of player's achievements by collector number for quick lookup
@@ -66,19 +64,61 @@ const AchievementsTable: React.FC = () => {
   ];
   const TOTAL_ACHIEVEMENTS = allPossibleAchievements.length;
 
-  // Generate achievement slots for current page
-  const startIndex = currentPage * CARDS_PER_PAGE;
-  const endIndex = Math.min(startIndex + CARDS_PER_PAGE, TOTAL_ACHIEVEMENTS);
-  
-  const currentPageSlots = [];
-  for (let i = startIndex; i < endIndex; i++) {
-    const achievementNumber = allPossibleAchievements[i];
-    const achievement = playerAchievementsMap.get(achievementNumber);
-    currentPageSlots.push({
-      number: achievementNumber,
-      achievement: achievement || null
-    });
-  }
+  // Generate all pages for the flip book (each page is a full 3x3 grid)
+  const generatePages = () => {
+    const pages = [];
+    const totalPages = Math.ceil(TOTAL_ACHIEVEMENTS / CARDS_PER_PAGE);
+    for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+      const startIndex = pageIndex * CARDS_PER_PAGE;
+      const endIndex = Math.min(startIndex + CARDS_PER_PAGE, TOTAL_ACHIEVEMENTS);
+      const pageSlots = [];
+      for (let i = startIndex; i < endIndex; i++) {
+        const achievementNumber = allPossibleAchievements[i];
+        const achievement = playerAchievementsMap.get(achievementNumber);
+        pageSlots.push({
+          number: achievementNumber,
+          achievement: achievement || null
+        });
+      }
+      // Fill empty slots to always have 9 per page
+      while (pageSlots.length < CARDS_PER_PAGE) {
+        pageSlots.push({ number: null, achievement: null });
+      }
+      pages.push(
+        <div key={pageIndex} className="binder-page">
+          <div className="achievement-grid">
+            {pageSlots.map((slot, idx) => (
+              <div key={slot.number ?? `empty-${idx}`} className={`achievement-card ${slot.achievement ? 'has-achievement' : 'missing-achievement'}`}>
+                <div className="card-image-container">
+                  {slot.achievement ? (
+                    <img 
+                      src={getAchievementImage(slot.achievement)} 
+                      alt={slot.achievement.name}
+                      className="achievement-card-image"
+                      onClick={() => setSelectedImage({
+                        url: getAchievementImage(slot.achievement!),
+                        name: slot.achievement!.name,
+                        rarity: slot.achievement!.rarity || 'Common',
+                        number: slot.achievement!.collectorNumber
+                      })}
+                    />
+                  ) : slot.number ? (
+                    <div className="missing-achievement-placeholder">
+                      <div className="achievement-number">#{slot.number}</div>
+                      <div className="missing-text">Not Earned</div>
+                    </div>
+                  ) : (
+                    <div className="missing-achievement-placeholder"></div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return pages;
+  };
 
   const totalPages = Math.ceil(TOTAL_ACHIEVEMENTS / CARDS_PER_PAGE);
 
@@ -108,18 +148,18 @@ const AchievementsTable: React.FC = () => {
         <div className="page-navigation">
           <button 
             className="page-btn prev-btn"
-            onClick={() => handlePageChange(Math.max(0, currentPage - 1))}
-            disabled={currentPage === 0 || isFlipping}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 0}
           >
             ← Previous
           </button>
           <div className="page-indicator">
-            Page {currentPage + 1} of {totalPages} (Achievements {startIndex + 1}-{endIndex})
+            Page {currentPage + 1} of {totalPages}
           </div>
           <button 
             className="page-btn next-btn"
             onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
-            disabled={currentPage === totalPages - 1 || isFlipping}
+            disabled={currentPage === totalPages - 1}
           >
             Next →
           </button>
@@ -131,38 +171,37 @@ const AchievementsTable: React.FC = () => {
       ) : achievementsError ? (
         <div className="error">Error loading achievements for {selectedPlayer}. Please try again later.</div>
       ) : (
-        <>
-          <div className="binder-container">
-            <div className={`binder-page ${isFlipping ? 'flipping' : ''}`}>
-              <div className="achievement-grid">
-                {currentPageSlots.map((slot) => (
-                  <div key={slot.number} className={`achievement-card ${slot.achievement ? 'has-achievement' : 'missing-achievement'}`}>
-                    <div className="card-image-container">
-                      {slot.achievement ? (
-                        <img 
-                          src={getAchievementImage(slot.achievement)} 
-                          alt={slot.achievement.name}
-                          className="achievement-card-image"
-                          onClick={() => setSelectedImage({
-                            url: getAchievementImage(slot.achievement!),
-                            name: slot.achievement!.name,
-                            rarity: slot.achievement!.rarity || 'Common',
-                            number: slot.achievement!.collectorNumber
-                          })}
-                        />
-                      ) : (
-                        <div className="missing-achievement-placeholder">
-                          <div className="achievement-number">#{slot.number}</div>
-                          <div className="missing-text">Not Earned</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
+        <div className="binder-container">
+          <HTMLFlipBook
+            ref={flipBookRef}
+            width={650}
+            height={650}
+            size="fixed"
+            minWidth={400}
+            maxWidth={800}
+            minHeight={400}
+            maxHeight={800}
+            showCover={false}
+            flippingTime={600}
+            usePortrait={true}
+            startPage={0}
+            drawShadow={true}
+            className="achievement-flipbook"
+            onFlip={(e: { data: number }) => setCurrentPage(e.data)}
+            style={{}}
+            startZIndex={0}
+            autoSize={true}
+            maxShadowOpacity={0.5}
+            useMouseEvents={false}
+            swipeDistance={0}
+            clickEventForward={false}
+            showPageCorners={true}
+            disableFlipByClick={true}
+            mobileScrollSupport={false}
+          >
+            {generatePages()}
+          </HTMLFlipBook>
+        </div>
       )}
 
       {selectedImage && (
