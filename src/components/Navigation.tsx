@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 const Navigation: React.FC = () => {
   return (
     <nav className="navigation">
-      <ul>
+      <img src="/agl-frontend/AGL_FF_2.png" alt="Arena Gauntlet League" className="logo flex flex-left " />
+      <ul className="float-right flex flex-right">
         <li>
           <Link to="/">Home</Link>
         </li>
