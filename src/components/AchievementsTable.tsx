@@ -12,7 +12,14 @@ const AchievementsTable: React.FC = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string; rarity: string; number: number } | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const flipBookRef = useRef<{ pageFlip: () => { flip: (page: number) => void } }>(null);
+  const flipBookRef = useRef<{ 
+    pageFlip: () => { 
+      flip: (page: number) => void;
+      flipNext: (corner?: 'top' | 'bottom') => void;
+      flipPrev: (corner?: 'top' | 'bottom') => void;
+      destroy?: () => void;
+    } 
+  }>(null);
   
   const CARDS_PER_PAGE = 9; // 3x3 grid
   
@@ -41,31 +48,82 @@ const AchievementsTable: React.FC = () => {
     setCurrentPage(0); // Reset to first page when changing players
   };
 
-  const handlePageChange = (newPage: number) => {
-    if (flipBookRef.current) {
-      const page = Math.max(0, Math.min(newPage, totalPages - 1));
-      flipBookRef.current.pageFlip().flip(page);
-    }
-  };
+  // Cleanup flip book on unmount to prevent DOM conflicts
+  useEffect(() => {
+    return () => {
+      if (flipBookRef.current) {
+        try {
+          const pageFlip = flipBookRef.current.pageFlip();
+          // Call destroy method if available to clean up DOM
+          if (typeof pageFlip.destroy === 'function') {
+            pageFlip.destroy();
+          }
+        } catch (error) {
+          console.log('Cleanup error (expected):', error);
+        }
+      }
+    };
+  }, []);
+
+
 
   // Create a map of player's achievements by collector number for quick lookup
-  const playerAchievementsMap = new Map<number, Achievement>();
-  if (achievementsResponse?.data?.achievementData) {
-    achievementsResponse.data.achievementData.forEach(achievement => {
-      playerAchievementsMap.set(achievement.collectorNumber, achievement);
-    });
-  }
+  const playerAchievementsMap = React.useMemo(() => {
+    const map = new Map<number, Achievement>();
+    if (achievementsResponse?.data?.achievementData) {
+      achievementsResponse.data.achievementData.forEach(achievement => {
+        map.set(achievement.collectorNumber, achievement);
+      });
+    }
+    return map;
+  }, [achievementsResponse?.data?.achievementData]);
 
   // Define all possible achievement numbers based on the image files
   // This includes all achievements that exist, whether the player has them or not
-  const allPossibleAchievements = [
+  const allPossibleAchievements = React.useMemo(() => [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
     21, 22, 23, 24, 25, 26, 27, 28, 29, 200, 201, 202, 203, 204, 205, 206, 207
-  ];
+  ], []);
   const TOTAL_ACHIEVEMENTS = allPossibleAchievements.length;
 
+  // Define the Page component using React.forwardRef
+  const Page = React.forwardRef<HTMLDivElement, { pageSlots: Array<{ number: number | null; achievement: Achievement | null }> }>(
+    ({ pageSlots }, ref) => (
+      <div ref={ref} className="binder-page">
+        <div className="achievement-grid">
+          {pageSlots.map((slot, idx) => (
+            <div key={slot.number ?? `empty-${idx}`} className={`achievement-card ${slot.achievement ? 'has-achievement' : 'missing-achievement'}`}>
+              <div className="card-image-container">
+                {slot.achievement ? (
+                  <img 
+                    src={getAchievementImage(slot.achievement)} 
+                    alt={slot.achievement.name}
+                    className="achievement-card-image"
+                    onClick={() => setSelectedImage({
+                      url: getAchievementImage(slot.achievement!),
+                      name: slot.achievement!.name,
+                      rarity: slot.achievement!.rarity || 'Common',
+                      number: slot.achievement!.collectorNumber
+                    })}
+                  />
+                ) : slot.number ? (
+                  <div className="missing-achievement-placeholder">
+                    <div className="achievement-number">#{slot.number}</div>
+                    <div className="missing-text">Not Earned</div>
+                  </div>
+                ) : (
+                  <div className="missing-achievement-placeholder"></div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  );
+
   // Generate all pages for the flip book (each page is a full 3x3 grid)
-  const generatePages = () => {
+  const generatePages = React.useMemo(() => {
     const pages = [];
     const totalPages = Math.ceil(TOTAL_ACHIEVEMENTS / CARDS_PER_PAGE);
     for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
@@ -85,40 +143,14 @@ const AchievementsTable: React.FC = () => {
         pageSlots.push({ number: null, achievement: null });
       }
       pages.push(
-        <div key={pageIndex} className="binder-page">
-          <div className="achievement-grid">
-            {pageSlots.map((slot, idx) => (
-              <div key={slot.number ?? `empty-${idx}`} className={`achievement-card ${slot.achievement ? 'has-achievement' : 'missing-achievement'}`}>
-                <div className="card-image-container">
-                  {slot.achievement ? (
-                    <img 
-                      src={getAchievementImage(slot.achievement)} 
-                      alt={slot.achievement.name}
-                      className="achievement-card-image"
-                      onClick={() => setSelectedImage({
-                        url: getAchievementImage(slot.achievement!),
-                        name: slot.achievement!.name,
-                        rarity: slot.achievement!.rarity || 'Common',
-                        number: slot.achievement!.collectorNumber
-                      })}
-                    />
-                  ) : slot.number ? (
-                    <div className="missing-achievement-placeholder">
-                      <div className="achievement-number">#{slot.number}</div>
-                      <div className="missing-text">Not Earned</div>
-                    </div>
-                  ) : (
-                    <div className="missing-achievement-placeholder"></div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Page 
+          key={pageIndex} 
+          pageSlots={pageSlots}
+        />
       );
     }
     return pages;
-  };
+  }, [playerAchievementsMap, Page, TOTAL_ACHIEVEMENTS, allPossibleAchievements]); // Only regenerate when player or achievements change
 
   const totalPages = Math.ceil(TOTAL_ACHIEVEMENTS / CARDS_PER_PAGE);
 
@@ -148,7 +180,14 @@ const AchievementsTable: React.FC = () => {
         <div className="page-navigation">
           <button 
             className="page-btn prev-btn"
-            onClick={() => handlePageChange(currentPage - 1)}
+            onClick={() => {
+              console.log('Previous button clicked, currentPage:', currentPage);
+              if (flipBookRef.current && currentPage > 0) {
+                const pageFlip = flipBookRef.current.pageFlip();
+                pageFlip.flipPrev('bottom');
+                console.log('flipPrev() called');
+              }
+            }}
             disabled={currentPage === 0}
           >
             ← Previous
@@ -158,7 +197,14 @@ const AchievementsTable: React.FC = () => {
           </div>
           <button 
             className="page-btn next-btn"
-            onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
+            onClick={() => {
+              console.log('Next button clicked, currentPage:', currentPage);
+              if (flipBookRef.current && currentPage < totalPages - 1) {
+                const pageFlip = flipBookRef.current.pageFlip();
+                pageFlip.flipNext('bottom');
+                console.log('flipNext() called');
+              }
+            }}
             disabled={currentPage === totalPages - 1}
           >
             Next →
@@ -173,6 +219,7 @@ const AchievementsTable: React.FC = () => {
       ) : (
         <div className="binder-container">
           <HTMLFlipBook
+            key={`flipbook-${selectedPlayer}`}
             ref={flipBookRef}
             width={650}
             height={650}
@@ -195,11 +242,11 @@ const AchievementsTable: React.FC = () => {
             useMouseEvents={false}
             swipeDistance={0}
             clickEventForward={false}
-            showPageCorners={true}
+            showPageCorners={false}
             disableFlipByClick={true}
             mobileScrollSupport={false}
           >
-            {generatePages()}
+            {generatePages}
           </HTMLFlipBook>
         </div>
       )}
