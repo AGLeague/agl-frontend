@@ -13,7 +13,10 @@ const rarityMap: Record<string, string> = {
 export const getAchievementImage = (achievement: Achievement): string => {
   const rarity = rarityMap[achievement.rarity] || 'Common';
   const imageName = `${achievement.collectorNumber} - ${achievement.name} (${rarity}).png`;
-  return `/src/assets/images/${imageName}`;
+  
+  // Use the public directory approach for static assets
+  // This ensures the images are available in both development and production
+  return `/agl-frontend/images/${imageName}`;
 };
 
 // Function to preload all achievement images

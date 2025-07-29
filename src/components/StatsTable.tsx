@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { usePlayers } from '../hooks/usePlayers';
 import SortableHeader from './SortableHeader';
-import type { Player } from '../types/player';
 
 const StatsTable: React.FC = () => {
   const { data: playersResponse, isLoading, error } = usePlayers();
