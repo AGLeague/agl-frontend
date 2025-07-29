@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - github-actions
+      - main
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/github-actions'
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Deploy to GitHub Pages
