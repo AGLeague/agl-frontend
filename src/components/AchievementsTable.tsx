@@ -12,7 +12,7 @@ const AchievementsTable: React.FC = () => {
   const [selectedPlayer, setSelectedPlayer] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string; rarity: string; number: number } | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const flipBookRef = useRef<{ pageFlip: () => { flip: (page: number) => void } }>(null);
+  const flipBookRef = useRef<{ pageFlip: () => { flipNext: (corner?: 'top' | 'bottom') => void; flipPrev: (corner?: 'top' | 'bottom') => void; flip: (page: number, corner?: 'top' | 'bottom') => void; getCurrentPageIndex: () => number; turnToNextPage: () => void; turnToPrevPage: () => void; turnToPage: (page: number) => void } }>(null);
   
   const CARDS_PER_PAGE = 9; // 3x3 grid
   
@@ -41,10 +41,23 @@ const AchievementsTable: React.FC = () => {
     setCurrentPage(0); // Reset to first page when changing players
   };
 
-  const handlePageChange = (newPage: number) => {
+  const handleNextPage = () => {
     if (flipBookRef.current) {
-      const page = Math.max(0, Math.min(newPage, totalPages - 1));
-      flipBookRef.current.pageFlip().flip(page);
+      const currentPageIndex = flipBookRef.current.pageFlip().getCurrentPageIndex();
+      console.log('Current page index:', currentPageIndex);
+      if (currentPageIndex < totalPages - 1) {
+        flipBookRef.current.pageFlip().turnToNextPage();
+      }
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (flipBookRef.current) {
+      const currentPageIndex = flipBookRef.current.pageFlip().getCurrentPageIndex();
+      console.log('Current page index:', currentPageIndex);
+      if (currentPageIndex > 0) {
+        flipBookRef.current.pageFlip().turnToPrevPage();
+      }
     }
   };
 
@@ -142,13 +155,51 @@ const AchievementsTable: React.FC = () => {
           selectedPlayer={selectedPlayer}
           onPlayerSelect={handlePlayerSelect}
         />
-        <h2>Achievements for {selectedPlayer}</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <h2>Achievements for {selectedPlayer}</h2>
+          <button 
+            onClick={() => {
+              const link = document.createElement('a');
+              link.href = '/agl-frontend/full_achievement.pdf';
+              link.download = 'full_achievement.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+              color: 'white',
+              border: 'none',
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, #20c997 0%, #17a2b8 100%)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(40, 167, 69, 0.3)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            Full Achievement List
+          </button>
+        </div>
         
         {/* Page Navigation */}
         <div className="page-navigation">
           <button 
             className="page-btn prev-btn"
-            onClick={() => handlePageChange(currentPage - 1)}
+            onClick={handlePrevPage}
             disabled={currentPage === 0}
           >
             ← Previous
@@ -158,7 +209,7 @@ const AchievementsTable: React.FC = () => {
           </div>
           <button 
             className="page-btn next-btn"
-            onClick={() => handlePageChange(Math.min(totalPages - 1, currentPage + 1))}
+            onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
           >
             Next →

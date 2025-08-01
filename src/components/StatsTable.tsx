@@ -79,7 +79,7 @@ const StatsTable: React.FC = () => {
             <tr key={index}>
               <td>{player.name}</td>
               <td>{player.stats.leagueCount}</td>
-              <td>{player.stats.winRate}%</td>
+              <td>{(player.stats.winRate * 100).toFixed(2)}%</td>
               <td>{player.stats.top8s}</td>
             </tr>
           ))}
