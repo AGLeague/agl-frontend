@@ -8,7 +8,7 @@ const Home: React.FC = () => {
         <div className="hero-section">
           <h1>Welcome to the Arena Gauntlet League</h1>
           <p className="hero-subtitle">
-            The AGL personal achievement gallery and stats website! Check your achievements here. Made with love by Bob P, John D, Stephen H, Caleb K, and the AGL League Committee!
+            The AGL personal achievement gallery and stats website! Check your achievements here. Made with love by Bob P, John D, Stephen H, and Caleb K.
           </p>
         </div>
         
