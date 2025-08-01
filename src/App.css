@@ -78,7 +78,6 @@
 .hero-section {
   text-align: center;
   margin-bottom: 4rem;
-  padding: 3rem 0;
 }
 
 .hero-section h1 {
@@ -250,6 +249,19 @@
     color: #e0e0e0;
   }
   
+  /* Mobile dark mode overrides */
+  @media (max-width: 768px) {
+    .achievements-container {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .achievements-container {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+  }
+  
   /* Stats page dark mode */
   .stats-page {
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
@@ -368,7 +380,7 @@
   
   /* Achievements page dark mode */
   .achievements-container {
-    background-color: #121212;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   }
   
   .achievements-container h2 {
@@ -740,6 +752,8 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .achievements-container h2 {
@@ -1114,6 +1128,7 @@
     padding: 0.5rem;
     min-height: 100vh;
     overflow: visible;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
   
   .achievements-container h2 {
@@ -1235,6 +1250,7 @@
     padding: 0.25rem;
     min-height: 100vh;
     overflow: visible;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
   
   .achievements-container h2 {
