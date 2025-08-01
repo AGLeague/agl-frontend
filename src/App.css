@@ -242,6 +242,242 @@
   flex-direction: column;
 }
 
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  /* General dark mode styles */
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+  
+  /* Stats page dark mode */
+  .stats-page {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  }
+  
+  .stats-title {
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .stats-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .stats-table-container {
+    background: #1a1a1a;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  .stats-table {
+    background: #1a1a1a;
+  }
+  
+  .stats-table th {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    color: #ffffff;
+  }
+  
+  .stats-table td {
+    color: #e0e0e0;
+    border-bottom: 1px solid #333;
+  }
+  
+  .stats-table tbody tr:nth-child(even) {
+    background-color: #2a2a2a;
+  }
+  
+  .stats-table tbody tr:hover {
+    background: linear-gradient(135deg, #3a4a5a 0%, #2c3e50 100%);
+  }
+  
+  .stats-pagination {
+    background: #1a1a1a;
+    border-top: 1px solid #333;
+  }
+  
+  .pagination-info {
+    color: #e0e0e0;
+  }
+  
+  .table-loading-overlay {
+    background: rgba(26, 26, 26, 0.9);
+  }
+  
+  .loading-text {
+    color: #667eea;
+  }
+  
+  .loading-spinner {
+    border: 4px solid #333;
+    border-top: 4px solid #667eea;
+  }
+  
+  /* Navigation dark mode */
+  .navigation {
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #333;
+  }
+  
+  .navigation a {
+    color: #e0e0e0;
+  }
+  
+  .navigation a:hover {
+    color: #667eea;
+  }
+  
+  /* Home page dark mode */
+  .home-content {
+    background-color: #121212;
+  }
+  
+  .hero-section h1 {
+    color: #ffffff;
+  }
+  
+  .hero-subtitle {
+    color: #b0b0b0;
+  }
+  
+  .feature-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  
+  .feature-card h3 {
+    color: #ffffff;
+  }
+  
+  .feature-card p {
+    color: #b0b0b0;
+  }
+  
+  .about-section {
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  
+  .about-section h2 {
+    color: #ffffff;
+  }
+  
+  .about-section p {
+    color: #b0b0b0;
+  }
+  
+  /* Achievements page dark mode */
+  .achievements-container {
+    background-color: #121212;
+  }
+  
+  .achievements-container h2 {
+    color: #ffffff;
+  }
+  
+  .player-selection {
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  
+  .player-selection label {
+    color: #e0e0e0;
+  }
+  
+  .dropdown-header {
+    background: #1a1a1a;
+    border: 2px solid #333;
+  }
+  
+  .dropdown-input {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+  
+  .dropdown-input::placeholder {
+    color: #666;
+  }
+  
+  .dropdown-toggle {
+    background: #2a2a2a;
+    color: #b0b0b0;
+    border-left: 1px solid #333;
+  }
+  
+  .dropdown-toggle:hover {
+    background: #3a3a3a;
+  }
+  
+  .dropdown-menu {
+    background: #1a1a1a;
+    border: 2px solid #333;
+  }
+  
+  .dropdown-item {
+    color: #000000;
+  }
+  
+  .dropdown-item:hover {
+    background: #2a2a2a;
+  }
+  
+  .dropdown-item.selected {
+    background: #667eea;
+    color: #ffffff;
+  }
+  
+  /* Achievement cards dark mode */
+  .achievement-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  
+  .achievement-card.has-achievement {
+    background: #1a1a1a;
+  }
+  
+  .achievement-card.missing-achievement {
+    background: #1a1a1a;
+  }
+  
+  .card-name {
+    color: #e0e0e0;
+  }
+  
+  .card-number {
+    color: #b0b0b0;
+  }
+  
+  .missing-text {
+    color: #b0b0b0;
+  }
+  
+  /* Modal dark mode */
+  .modal-content {
+    background: #1a1a1a;
+    border: 1px solid #333;
+  }
+  
+  .modal-caption {
+    color: #ffffff;
+  }
+  
+  .modal-number {
+    color: #b0b0b0;
+  }
+  
+  /* Loading and error states */
+  .loading {
+    color: #b0b0b0;
+  }
+  
+  .error {
+    background-color: #2a1a1a;
+    border: 1px solid #5a3a3a;
+    color: #ff6b6b;
+  }
+}
+
 .stats-header {
   text-align: center;
   margin-bottom: 2rem;
