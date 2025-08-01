@@ -156,7 +156,7 @@ const AchievementsTable: React.FC = () => {
           onPlayerSelect={handlePlayerSelect}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <h2>Achievements for {selectedPlayer}</h2>
+          <h2>{selectedPlayer}</h2>
           <button 
             onClick={() => {
               const link = document.createElement('a');
