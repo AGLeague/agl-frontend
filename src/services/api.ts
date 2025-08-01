@@ -3,9 +3,19 @@ import { Player, PlayerAchievements, PlayersResponse, PlayerNamesResponse } from
 const API_BASE_URL = 'https://agl.calebkoch.com/api';
 
 export const playerApi = {
-  // Get all players
-  getPlayers: async (): Promise<PlayersResponse> => {
-    const response = await fetch(`${API_BASE_URL}/players`);
+  // Get all players with optional pagination
+  getPlayers: async (page?: number): Promise<PlayersResponse> => {
+    const url = page ? `${API_BASE_URL}/players?page=${page}` : `${API_BASE_URL}/players`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch players');
+    }
+    return response.json();
+  },
+
+  // Get players by URL (for pagination)
+  getPlayersByUrl: async (url: string): Promise<PlayersResponse> => {
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Failed to fetch players');
     }

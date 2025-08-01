@@ -237,14 +237,14 @@
 .stats-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem 0;
+  padding: 1rem 0;
   display: flex;
   flex-direction: column;
 }
 
 .stats-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding: 0 2rem;
 }
 
@@ -279,13 +279,16 @@
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   overflow: auto;
-  max-height: 70vh;
+  max-height: 120vh;
+  min-height: 400px;
+  position: relative;
 }
 
 .stats-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
+  min-height: 300px;
 }
 
 .stats-table th,
@@ -321,6 +324,88 @@
   background-color: #fafbfc;
 }
 
+/* Stats Pagination Styles */
+.stats-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid #f0f0f0;
+}
+
+.pagination-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.pagination-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pagination-info {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Table Loading Overlay */
+.table-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+.loading-text {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Responsive Stats Page */
 @media (max-width: 768px) {
   .stats-page {
@@ -347,12 +432,28 @@
   .stats-table-container {
     margin: 0;
     border-radius: 8px;
-    max-height: 60vh;
+    max-height: 75vh;
   }
 
   .stats-table th,
   .stats-table td {
     padding: 1rem 0.75rem;
+  }
+  
+  .stats-pagination {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .pagination-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .pagination-info {
+    font-size: 0.9rem;
+    min-width: 100px;
   }
 }
 

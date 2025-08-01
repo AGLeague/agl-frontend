@@ -17,7 +17,19 @@ export const playerKeys = {
 export const usePlayers = () => {
   return useQuery({
     queryKey: playerKeys.lists(),
-    queryFn: playerApi.getPlayers,
+    queryFn: async () => {
+      return playerApi.getPlayers();
+    },
+  });
+};
+
+// Hook for fetching paginated players
+export const usePaginatedPlayers = (page: number = 1) => {
+  return useQuery({
+    queryKey: [...playerKeys.lists(), page],
+    queryFn: async () => {
+      return playerApi.getPlayers(page);
+    },
   });
 };
 
