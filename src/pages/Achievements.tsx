@@ -1,11 +1,12 @@
 import React from 'react';
+import { Box } from '@mui/material';
 import AchievementsTable from '../components/AchievementsTable';
 
 const Achievements: React.FC = () => {
   return (
-    <div className="page-container">
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <AchievementsTable />
-    </div>
+    </Box>
   );
 };
 

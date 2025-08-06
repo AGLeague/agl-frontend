@@ -1,4 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
+import {
+  Box,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Alert,
+  Paper
+} from '@mui/material';
 import { usePlayerNames } from '../hooks/usePlayers';
 
 interface PlayerDropdownProps {
@@ -36,51 +47,109 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ selectedPlayer, onPlaye
   };
 
   if (isLoading) {
-    return <div className="loading">Loading players...</div>;
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <CircularProgress size={20} />
+        <span>Loading players...</span>
+      </Box>
+    );
   }
 
   if (error) {
-    return <div className="error">Error loading players</div>;
+    return <Alert severity="error">Error loading players</Alert>;
   }
 
   return (
-    <div className="player-dropdown" ref={dropdownRef}>
-      <div className="dropdown-header">
-        <input
-          type="text"
+    <Box sx={{ position: 'relative', minWidth: 300 }} ref={dropdownRef}>
+      <Box sx={{ display: 'flex', alignItems: 'center', border: '2px solid #ddd', borderRadius: 1, overflow: 'hidden' }}>
+        <TextField
           placeholder="Search for a player..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => setIsOpen(true)}
-          className="dropdown-input"
+          variant="standard"
+          sx={{
+            flex: 1,
+            '& .MuiInput-root': {
+              border: 'none',
+              '&:before': { borderBottom: 'none' },
+              '&:after': { borderBottom: 'none' },
+              '&:hover:before': { borderBottom: 'none' },
+            }
+          }}
+          InputProps={{
+            style: { padding: '12px' }
+          }}
         />
-        <button
-          type="button"
+        <Button
           onClick={() => setIsOpen(!isOpen)}
-          className="dropdown-toggle"
+          sx={{
+            px: 2,
+            py: 1,
+            backgroundColor: '#f8f9fa',
+            borderLeft: '1px solid #ddd',
+            borderRadius: 0,
+            minWidth: 'auto',
+            '&:hover': {
+              backgroundColor: '#e9ecef',
+            }
+          }}
         >
           ▼
-        </button>
-      </div>
-      
+        </Button>
+      </Box>
+
       {isOpen && (
-        <div className="dropdown-menu">
-          {filteredPlayers.length === 0 ? (
-            <div className="dropdown-item no-results">No players found</div>
-          ) : (
-            filteredPlayers.map((playerName) => (
-              <div
-                key={playerName}
-                className={`dropdown-item ${selectedPlayer === playerName ? 'selected' : ''}`}
-                onClick={() => handlePlayerSelect(playerName)}
-              >
-                {playerName}
-              </div>
-            ))
-          )}
-        </div>
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            maxHeight: 300,
+            overflow: 'auto',
+            border: '2px solid #ddd',
+            borderTop: 'none',
+            borderRadius: '0 0 4px 4px',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          }}
+        >
+          <List sx={{ p: 0 }}>
+            {filteredPlayers.length === 0 ? (
+              <ListItem>
+                <ListItemText
+                  primary="No players found"
+                  sx={{
+                    color: '#999',
+                    fontStyle: 'italic',
+                    textAlign: 'center'
+                  }}
+                />
+              </ListItem>
+            ) : (
+              filteredPlayers.map((playerName) => (
+                <ListItem
+                  key={playerName}
+                  onClick={() => handlePlayerSelect(playerName)}
+                  sx={{
+                    cursor: 'pointer',
+                    backgroundColor: selectedPlayer === playerName ? '#e3f2fd' : 'transparent',
+                    color: selectedPlayer === playerName ? '#1976d2' : 'inherit',
+                    fontWeight: selectedPlayer === playerName ? 500 : 400,
+                    '&:hover': {
+                      backgroundColor: selectedPlayer === playerName ? '#e3f2fd' : '#f8f9fa',
+                    }
+                  }}
+                >
+                  <ListItemText primary={playerName} />
+                </ListItem>
+              ))
+            )}
+          </List>
+        </Paper>
       )}
-    </div>
+    </Box>
   );
 };
 

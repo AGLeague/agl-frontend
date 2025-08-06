@@ -1,54 +1,107 @@
-# React + TypeScript + Vite
+# AGL Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Arena Gauntlet League personal achievement gallery and stats website. Built with React, TypeScript, and Material UI.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Player Statistics**: Track performance metrics, rankings, and detailed analytics for all AGL competitors
+- **Achievements Gallery**: Explore the complete collection of achievements earned by players across all seasons
+- **Interactive Flipbook**: Browse achievements in a beautiful card-based flipbook interface
+- **Responsive Design**: Optimized for desktop and mobile devices
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 19** with TypeScript
+- **Material UI** for modern, accessible UI components
+- **React Router** for navigation
+- **React Query** for data fetching and caching
+- **React PageFlip** for the achievement flipbook
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Material UI Components Used
+
+The application has been fully migrated to use Material UI components:
+
+### Layout & Navigation
+- `AppBar` & `Toolbar` for the navigation bar
+- `Container` for responsive layout
+- `Box` for flexible layout containers
+- `Grid` for responsive grid layouts
+
+### Data Display
+- `Table`, `TableHead`, `TableBody`, `TableCell` for statistics
+- `Paper` for elevated content areas
+- `Card` & `CardContent` for feature cards
+- `List` & `ListItem` for dropdown menus
+
+### Interactive Elements
+- `Button` for all clickable actions
+- `TextField` for search inputs
+- `Modal` for image previews
+- `IconButton` for close buttons
+- `Chip` for achievement rarity badges
+
+### Feedback & Loading
+- `CircularProgress` for loading states
+- `Alert` for error messages
+- `Typography` for consistent text styling
+
+### Theme
+
+The application uses a custom Material UI theme with:
+- Primary color: `#667eea` (blue gradient)
+- Secondary color: `#764ba2` (purple gradient)
+- Custom button styling with gradient backgrounds
+- Responsive typography scale
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
+src/
+├── components/          # Reusable UI components
+│   ├── AchievementsTable.tsx
+│   ├── ImagePreviewModal.tsx
+│   ├── Navigation.tsx
+│   ├── PlayerDropdown.tsx
+│   ├── SortableHeader.tsx
+│   └── StatsTable.tsx
+├── hooks/              # Custom React hooks
+│   └── usePlayers.ts
+├── pages/              # Page components
+│   ├── Achievements.tsx
+│   ├── Home.tsx
+│   └── Stats.tsx
+├── services/           # API services
+│   └── api.ts
+├── types/              # TypeScript type definitions
+│   └── player.ts
+├── utils/              # Utility functions
+│   └── achievementImages.ts
+└── App.tsx            # Main application component
+```
+
+## Contributors
+
+Made with love by Bob P, John D, Stephen H, and Caleb K.
+
+## Recent Updates
+
+- **Material UI Migration**: Complete redesign using Material UI components for a modern, accessible interface
+- **Enhanced UX**: Improved loading states, error handling, and responsive design
+- **Better Performance**: Optimized component rendering and data fetching
+- **Accessibility**: Improved keyboard navigation and screen reader support

@@ -1,4 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { 
+  Box, 
+  Typography, 
+  Button, 
+  Paper, 
+  Alert,
+  CircularProgress
+} from '@mui/material';
 import { usePlayers } from '../hooks/usePlayers';
 import { usePlayerAchievements } from '../hooks/usePlayers';
 import type { Achievement } from '../types/player';
@@ -136,28 +144,67 @@ const AchievementsTable: React.FC = () => {
   const totalPages = Math.ceil(TOTAL_ACHIEVEMENTS / CARDS_PER_PAGE);
 
   if (isLoadingPlayers) {
-    return <div className="loading">Loading players...</div>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+        <Typography sx={{ ml: 2 }}>Loading players...</Typography>
+      </Box>
+    );
   }
 
   if (playersError) {
-    return <div className="error">Error loading players. Please try again later.</div>;
+    return (
+      <Alert severity="error" sx={{ m: 2 }}>
+        Error loading players. Please try again later.
+      </Alert>
+    );
   }
 
   if (!selectedPlayer) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
-    <div className="achievements-container">
-      <div className="player-selection">
-        <label htmlFor="player-dropdown">Select Player:</label>
+    <Box 
+      sx={{ 
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'
+      }}
+    >
+      <Paper 
+        sx={{ 
+          m: 2, 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 4, 
+          p: 2, 
+          borderRadius: 2, 
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+          flexWrap: 'wrap'
+        }}
+      >
+        <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', whiteSpace: 'nowrap' }}>
+          Select Player:
+        </Typography>
         <PlayerDropdown 
           selectedPlayer={selectedPlayer}
           onPlayerSelect={handlePlayerSelect}
         />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <h2>{selectedPlayer}</h2>
-          <button 
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="h5" component="h2" sx={{ color: '#333' }}>
+            {selectedPlayer}
+          </Typography>
+          <Button 
+            variant="contained"
             onClick={() => {
               const link = document.createElement('a');
               link.href = '/agl-frontend/full_achievement.pdf';
@@ -166,93 +213,102 @@ const AchievementsTable: React.FC = () => {
               link.click();
               document.body.removeChild(link);
             }}
-            style={{
+            sx={{
               background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
-              color: 'white',
-              border: 'none',
-              padding: '0.5rem 1rem',
-              borderRadius: '6px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              fontSize: '0.9rem',
-              transition: 'all 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, #20c997 0%, #17a2b8 100%)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(40, 167, 69, 0.3)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
+              '&:hover': {
+                background: 'linear-gradient(135deg, #20c997 0%, #17a2b8 100%)',
+              }
             }}
           >
             Full Achievement List
-          </button>
-        </div>
+          </Button>
+        </Box>
         
         {/* Page Navigation */}
-        <div className="page-navigation">
-          <button 
-            className="page-btn prev-btn"
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, ml: 'auto' }}>
+          <Button 
+            variant="contained"
             onClick={handlePrevPage}
             disabled={currentPage === 0}
+            sx={{ 
+              background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #1a252f 0%, #2c3e50 100%)',
+              },
+              '&:disabled': {
+                background: '#ccc',
+              }
+            }}
           >
             ← Previous
-          </button>
-          <div className="page-indicator">
+          </Button>
+          <Typography sx={{ fontWeight: 600, color: '#333', minWidth: 120, textAlign: 'center' }}>
             Page {currentPage + 1} of {totalPages}
-          </div>
-          <button 
-            className="page-btn next-btn"
+          </Typography>
+          <Button 
+            variant="contained"
             onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
+            sx={{ 
+              background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #1a252f 0%, #2c3e50 100%)',
+              },
+              '&:disabled': {
+                background: '#ccc',
+              }
+            }}
           >
             Next →
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Box>
+      </Paper>
 
       {isLoadingAchievements ? (
-        <div className="loading">Loading achievements for {selectedPlayer}...</div>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          <CircularProgress />
+          <Typography sx={{ ml: 2 }}>
+            Loading achievements for {selectedPlayer}...
+          </Typography>
+        </Box>
       ) : achievementsError ? (
-        <div className="error">Error loading achievements for {selectedPlayer}. Please try again later.</div>
+        <Alert severity="error" sx={{ m: 2 }}>
+          Error loading achievements for {selectedPlayer}. Please try again later.
+        </Alert>
       ) : (
-        <div className="binder-container">
-          <HTMLFlipBook
-            ref={flipBookRef}
-            width={650}
-            height={650}
-            size="fixed"
-            minWidth={400}
-            maxWidth={800}
-            minHeight={400}
-            maxHeight={800}
-            showCover={false}
-            flippingTime={600}
-            usePortrait={true}
-            startPage={0}
-            drawShadow={true}
-            className="achievement-flipbook"
-            onFlip={(e: { data: number }) => setCurrentPage(e.data)}
-            style={{}}
-            startZIndex={0}
-            autoSize={true}
-            maxShadowOpacity={0.5}
-            useMouseEvents={false}
-            swipeDistance={0}
-            clickEventForward={false}
-            showPageCorners={true}
-            disableFlipByClick={true}
-            mobileScrollSupport={false}
-          >
-            {generatePages()}
-          </HTMLFlipBook>
-        </div>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', p: 2 }}>
+          <div className="binder-container">
+            <HTMLFlipBook
+              ref={flipBookRef}
+              width={650}
+              height={650}
+              size="fixed"
+              minWidth={400}
+              maxWidth={800}
+              minHeight={400}
+              maxHeight={800}
+              showCover={false}
+              flippingTime={600}
+              usePortrait={true}
+              startPage={0}
+              drawShadow={true}
+              className="achievement-flipbook"
+              onFlip={(e: { data: number }) => setCurrentPage(e.data)}
+              style={{}}
+              startZIndex={0}
+              autoSize={true}
+              maxShadowOpacity={0.5}
+              useMouseEvents={false}
+              swipeDistance={0}
+              clickEventForward={false}
+              showPageCorners={true}
+              disableFlipByClick={true}
+              mobileScrollSupport={false}
+            >
+              {generatePages()}
+            </HTMLFlipBook>
+          </div>
+        </Box>
       )}
 
       {selectedImage && (
@@ -264,7 +320,7 @@ const AchievementsTable: React.FC = () => {
           onClose={() => setSelectedImage(null)}
         />
       )}
-    </div>
+    </Box>
   );
 };
 
