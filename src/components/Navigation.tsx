@@ -4,8 +4,7 @@ import {
   AppBar, 
   Toolbar, 
   Button, 
-  Box,
-  Typography
+  Box
 } from '@mui/material';
 
 const Navigation: React.FC = () => {
