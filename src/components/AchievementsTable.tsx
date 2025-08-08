@@ -10,10 +10,35 @@ import {
 import { usePlayers } from '../hooks/usePlayers';
 import { usePlayerAchievements } from '../hooks/usePlayers';
 import type { Achievement } from '../types/player';
-import { getAchievementImage, preloadAchievementImages } from '../utils/achievementImages';
+import { getAchievementImagePaths, preloadAchievementImages } from '../utils/achievementImages';
 import ImagePreviewModal from './ImagePreviewModal';
 import PlayerDropdown from './PlayerDropdown';
 import HTMLFlipBook from 'react-pageflip';
+
+// Renders an achievement image with fallback between multiple candidate paths
+const AchievementImage: React.FC<{
+  achievement: Achievement;
+  className?: string;
+  onClick: (resolvedSrc: string) => void;
+}> = ({ achievement, className, onClick }) => {
+  const paths = getAchievementImagePaths(achievement);
+  const [index, setIndex] = useState(0);
+  const src = paths[index];
+
+  if (!src) {
+    return null;
+  }
+
+  return (
+    <img
+      src={src}
+      alt={achievement.name}
+      className={className}
+      onError={() => setIndex((i) => i + 1)}
+      onClick={() => onClick(src)}
+    />
+  );
+};
 
 const AchievementsTable: React.FC = () => {
   const { data: playersResponse, isLoading: isLoadingPlayers, error: playersError } = usePlayers();
@@ -112,16 +137,17 @@ const AchievementsTable: React.FC = () => {
               <div key={slot.number ?? `empty-${idx}`} className={`achievement-card ${slot.achievement ? 'has-achievement' : 'missing-achievement'}`}>
                 <div className="card-image-container">
                   {slot.achievement ? (
-                    <img 
-                      src={getAchievementImage(slot.achievement)} 
-                      alt={slot.achievement.name}
+                    <AchievementImage
+                      achievement={slot.achievement}
                       className="achievement-card-image"
-                      onClick={() => setSelectedImage({
-                        url: getAchievementImage(slot.achievement!),
-                        name: slot.achievement!.name,
-                        rarity: slot.achievement!.rarity || 'Common',
-                        number: slot.achievement!.collectorNumber
-                      })}
+                      onClick={(resolvedSrc) =>
+                        setSelectedImage({
+                          url: resolvedSrc,
+                          name: slot.achievement!.name,
+                          rarity: slot.achievement!.rarity || 'Common',
+                          number: slot.achievement!.collectorNumber,
+                        })
+                      }
                     />
                   ) : slot.number ? (
                     <div className="missing-achievement-placeholder">
@@ -180,52 +206,100 @@ const AchievementsTable: React.FC = () => {
         background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 100%)'
       }}
     >
-      <Paper 
-        sx={{ 
-          m: 2, 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 4, 
-          p: 2, 
-          borderRadius: 2, 
+      <Paper
+        sx={{
+          m: { xs: 1.5, sm: 2 },
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+          alignItems: 'center',
+          gap: { xs: 1.5, sm: 2, md: 3 },
+          p: { xs: 1.5, sm: 2 },
+          borderRadius: 2,
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-          flexWrap: 'wrap'
+          '@media (min-width:1280px)': {
+            gridTemplateColumns: 'auto 1fr auto',
+          },
         }}
       >
-        <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', whiteSpace: 'nowrap' }}>
-          Select Player:
-        </Typography>
-        <PlayerDropdown 
-          selectedPlayer={selectedPlayer}
-          onPlayerSelect={handlePlayerSelect}
-        />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Typography variant="h5" component="h2" sx={{ color: '#333' }}>
-            {selectedPlayer}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+          <Typography variant="body1" sx={{ fontWeight: 600, color: '#333', whiteSpace: 'nowrap' }}>
+            Select Player:
           </Typography>
-          <Button 
-            variant="contained"
-            onClick={() => {
-              const link = document.createElement('a');
-              link.href = '/agl-frontend/full_achievement.pdf';
-              link.download = 'full_achievement.pdf';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            }}
-            sx={{
-              background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
-              '&:hover': {
-                background: 'linear-gradient(135deg, #20c997 0%, #17a2b8 100%)',
-              }
-            }}
-          >
-            Full Achievement List
-          </Button>
         </Box>
-        
+        <Box
+          sx={{
+            width: '100%',
+            overflow: 'visible',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            gap: { xs: 1, sm: 1.5, md: 2 },
+            flexWrap: 'wrap',
+            '@media (min-width:1280px)': { flexWrap: 'nowrap' },
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5, md: 2 } }}>
+            <PlayerDropdown
+              selectedPlayer={selectedPlayer}
+              onPlayerSelect={handlePlayerSelect}
+            />
+            <Typography
+              variant="subtitle1"
+              component="h2"
+              sx={{
+                color: '#333',
+                fontWeight: 600,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: { xs: 220, sm: 280, md: 360 }
+              }}
+              title={selectedPlayer}
+            >
+              {selectedPlayer}
+            </Typography>
+          </Box>
+          {/* Desktop: keep Full Achievement List button to the right of the name */}
+          <Box sx={{ ml: { xs: 0, lg: 1 } }}>
+            <Button
+              size="small"
+              variant="contained"
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = '/agl-frontend/full_achievement.pdf';
+                link.download = 'full_achievement.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              sx={{
+                display: 'none',
+                '@media (min-width:1280px)': { display: 'inline-flex' },
+                background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+                '&:hover': {
+                  background: 'linear-gradient(135deg, #20c997 0%, #17a2b8 100%)'
+                }
+              }}
+            >
+              Full Achievement List
+            </Button>
+          </Box>
+        </Box>
+
         {/* Page Navigation */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, ml: 'auto' }}>
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 1.5,
+          gridColumn: '1 / -1',
+          order: 4,
+          '@media (min-width:1280px)': {
+            gridColumn: 'auto',
+            order: 'initial',
+            justifyContent: 'center',
+          },
+        }}>
           <Button 
             variant="contained"
             onClick={handlePrevPage}
@@ -242,7 +316,7 @@ const AchievementsTable: React.FC = () => {
           >
             ← Previous
           </Button>
-          <Typography sx={{ fontWeight: 600, color: '#333', minWidth: 120, textAlign: 'center' }}>
+          <Typography sx={{ fontWeight: 600, color: '#333', minWidth: { xs: 90, sm: 120 }, textAlign: 'center' }}>
             Page {currentPage + 1} of {totalPages}
           </Typography>
           <Button 
@@ -260,6 +334,37 @@ const AchievementsTable: React.FC = () => {
             }}
           >
             Next →
+          </Button>
+        </Box>
+
+        {/* Mobile: show Full Achievement List button under pagination */}
+        <Box sx={{
+          display: 'block',
+          gridColumn: '1 / -1',
+          order: 5,
+          width: '100%',
+          '@media (min-width:1280px)': { display: 'none' },
+        }}>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={() => {
+              const link = document.createElement('a');
+              link.href = '/agl-frontend/full_achievement.pdf';
+              link.download = 'full_achievement.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+            sx={{
+              background: 'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+              width: { xs: '100%', md: 'auto' },
+              '&:hover': {
+                background: 'linear-gradient(135deg, #20c997 0%, #17a2b8 100%)'
+              }
+            }}
+          >
+            Full Achievement List
           </Button>
         </Box>
       </Paper>

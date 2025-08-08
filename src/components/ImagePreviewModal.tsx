@@ -107,11 +107,19 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
     <Modal
       open={true}
       onClose={onClose}
+      keepMounted
+      BackdropProps={{
+        sx: { backgroundColor: 'rgba(0, 0, 0, 0.75)' }
+      }}
       sx={{
+        zIndex: 2000,
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
-        p: 2
+        justifyContent: 'center',
+        p: 2,
+        m: 0,
+        width: '100vw',
+        height: '100vh',
       }}
     >
       <Box 
@@ -119,13 +127,16 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
           position: 'relative',
           background: 'white',
           borderRadius: 2,
-          maxWidth: '90vw',
+          width: { xs: '100%', sm: 'auto' },
+          maxWidth: { xs: 'calc(100vw - 32px)', sm: '540px' },
           maxHeight: '90vh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           p: 2,
-          outline: 'none'
+          outline: 'none',
+          boxShadow: '0 12px 24px rgba(0,0,0,0.4)',
+          boxSizing: 'border-box',
         }}
       >
         <IconButton
@@ -149,8 +160,9 @@ const ImagePreviewModal: React.FC<ImagePreviewModalProps> = ({
           src={imageUrl} 
           alt={achievementName} 
           sx={{
-            maxWidth: '100%',
-            maxHeight: '70vh',
+            width: '100%',
+            height: 'auto',
+            maxHeight: { xs: '60vh', sm: '70vh' },
             objectFit: 'contain',
             borderRadius: 1
           }}

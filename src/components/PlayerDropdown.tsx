@@ -60,8 +60,24 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ selectedPlayer, onPlaye
   }
 
   return (
-    <Box sx={{ position: 'relative', minWidth: 300 }} ref={dropdownRef}>
-      <Box sx={{ display: 'flex', alignItems: 'center', border: '2px solid #ddd', borderRadius: 1, overflow: 'hidden' }}>
+    <Box
+      sx={{
+        position: 'relative',
+        width: { xs: '100%', sm: 320, md: 360 },
+      }}
+      ref={dropdownRef}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          border: '2px solid #ddd',
+          borderRadius: 1,
+          overflow: 'hidden',
+          width: '100%',
+          backgroundColor: 'white',
+        }}
+      >
         <TextField
           placeholder="Search for a player..."
           value={searchTerm}
@@ -80,9 +96,17 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ selectedPlayer, onPlaye
           InputProps={{
             style: { padding: '12px' }
           }}
+          onKeyDown={(e) => {
+            // Open dropdown when typing
+            if (!isOpen) setIsOpen(true);
+          }}
+          onClick={() => {
+            // Toggle open on click to ensure visibility on desktop
+            if (!isOpen) setIsOpen(true);
+          }}
         />
         <Button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen((prev) => !prev)}
           sx={{
             px: 2,
             py: 1,
@@ -90,6 +114,8 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ selectedPlayer, onPlaye
             borderLeft: '1px solid #ddd',
             borderRadius: 0,
             minWidth: 'auto',
+            maxWidth: { xs: 48, sm: 56 },
+            flexShrink: 0,
             '&:hover': {
               backgroundColor: '#e9ecef',
             }
@@ -99,7 +125,7 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ selectedPlayer, onPlaye
         </Button>
       </Box>
 
-      {isOpen && (
+      {isOpen && filteredPlayers && (
         <Paper
           sx={{
             position: 'absolute',
