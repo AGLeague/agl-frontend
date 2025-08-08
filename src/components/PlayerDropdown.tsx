@@ -87,16 +87,14 @@ const PlayerDropdown: React.FC<PlayerDropdownProps> = ({ selectedPlayer, onPlaye
           sx={{
             flex: 1,
             '& .MuiInput-root': {
+              paddingLeft: '12px',
               border: 'none',
               '&:before': { borderBottom: 'none' },
               '&:after': { borderBottom: 'none' },
               '&:hover:before': { borderBottom: 'none' },
             }
           }}
-          InputProps={{
-            style: { padding: '12px' }
-          }}
-          onKeyDown={(e) => {
+          onKeyDown={() => {
             // Open dropdown when typing
             if (!isOpen) setIsOpen(true);
           }}
