@@ -6,7 +6,7 @@ const rarityMap: Record<string, string> = {
   'U': 'Uncommon',
   'R': 'Rare',
   'M': 'Mythic',
-  'S': 'SPG'
+  'S': 'Expert'
 };
 
 // Function to get the image path for an achievement
